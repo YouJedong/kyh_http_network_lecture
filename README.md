@@ -59,7 +59,7 @@ ex) 한 PC에서 여러 앱(음악, 게임 등)을 실행할 때 같은 IP를 �
 
 ### TCP 3 way handshake
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/912fa578-60cf-4042-b01d-d0ad5cdbd89d/8d74dba7-86d5-4e9c-8472-3dffc463b21d/Untitled.png)
+<img width="706" alt="tcp_3_way_handshake" src="https://github.com/YouJedong/kyh_http_network_lecture/assets/108327853/de433ccc-f186-476e-834f-e9b64ba5dc03">
 
 1. SYN이라는 요청으로 상대 서버에 접속 요청을 한다.
 2. 상대 서버는 요청을 받았으면 SYN+ACK 메세지를 보내면서 접속 요청을 보냄
