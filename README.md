@@ -100,4 +100,52 @@ ex) 한 PC에서 여러 앱(음악, 게임 등)을 실행할 때 같은 IP를 �
 
 - 클라이언트 - 서버 구조
 - 무상태 프로토콜 (Stateless) - 이전에 요청한 상태를 기억하지 못함
-- 비연결성
+- 비연결성 - 계속 연결을 하지않고 한번 요청 한번응답 끝
+    - 한계
+        - 계속 TCP/IP 3way handshake를 함
+        - 하지만, html,자바스크립트,이미지등등을 한번 연결해서 가져오게 최적화하는 등 한계를 많이 해결함
+
+> 대용량 트래픽(선착순 이벤트, 예약)을 스테이스리스한 방식으로 설계하는 것이중요하다.
+> 
+
+### HTTP 메시지
+
+- HTTP의 구조
+    
+    ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/912fa578-60cf-4042-b01d-d0ad5cdbd89d/4472df62-61e2-4ca2-bcdc-2a2c6de59285/Untitled.png)
+    
+    - 시작 라인 ex) GET /search?q=hello(요청) / HTTP/1.1 200 OK(응답)
+    - 헤더 ex) Host: www.google.com
+    - 공백라인 - 무조건 공백라인을 넣음
+    - message body - 데이터를 넣음
+
+### 시작 라인 - 응답 메세지
+
+```html
+HTTP/1.1 200 OK
+```
+
+- 상태 코드(200) : HTTP 상태 코드 - 요청 성공 및 실패를 나타냄
+    - 400: 클라이언트 요청 오류 - 클라이언트 쪽에서 잘못된 요청을 보냈을때
+    - 500: 서버가 장애가 있거나 오류가 있을 때
+
+### HTTP 헤더
+
+```html
+Host: www.google.com
+Content-Type: text/html;charset=UTF-8
+```
+
+- 헤더필드 - field-name “:” OWS field-value OWD *OWS는 띄어쓰기 허용
+- field-name은 대소문자 구분 없음 / value는 대소문자 구분함
+- HTTP 전송에 필요한 모든 부가 정보들어있음
+
+## 4. HTTP 메서드
+
+### HTTP API를 만들 때 생각해야할 것
+
+1. API URI는 자원(resource) 식별 관점에서!!!
+    - ex) 회원 조회라면 회원이라는 자원에 초점을 두자 /member
+2. 계층 구조상 상위를 컬렉션으로 보고 복수단어를 사용 권장(member → memvers)
+3. 조회/등록/수정/삭제 를 만들 때 자원 식별관점으로 설계하면 어떻게 구분할까?
+    - 바로 HTTP 메서드를 이용
