@@ -112,7 +112,7 @@ ex) 한 PC에서 여러 앱(음악, 게임 등)을 실행할 때 같은 IP를 �
 
 - HTTP의 구조
     
-    ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/912fa578-60cf-4042-b01d-d0ad5cdbd89d/4472df62-61e2-4ca2-bcdc-2a2c6de59285/Untitled.png)
+    ![http구조](https://github.com/YouJedong/kyh_http_network_lecture/assets/108327853/7f616c74-ccc7-47be-8212-0bd55355e3d2)
     
     - 시작 라인 ex) GET /search?q=hello(요청) / HTTP/1.1 200 OK(응답)
     - 헤더 ex) Host: www.google.com
