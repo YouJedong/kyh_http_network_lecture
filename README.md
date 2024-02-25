@@ -205,3 +205,107 @@ Content-Type: text/html;charset=UTF-8
 - 캐시 가능
     - 응답 결과 리소스를 캐시해서 사용해도 되는가?
     - 실제 GET, HEAD 정도만 캐시로 사용 가능
+## 5. HTTP 메서드 활용
+
+- 정적 데이터 조회
+    - ex) GET /static/star.jpg
+    - 서버는 이미지, 정적인 데이터를 준다.
+- 동적 데이터 조회
+    - 쿼리 파라미터 사용 ex) /search?q=hello
+- HTML Form 데이터 전송
+    - html의 form태그를 통해 데이터를 전송하면 요청 헤더에 Content-Type과 body에 아래 같은 형식으로 들어감
+        
+        ```html
+        <form action="/save" method="post">
+        	<input type="text" name="username"/>
+        </form>
+        
+        ---------------------------------------
+        POST /save HTTP/1.1
+        Host: localhost:8080
+        Content-Type: application/x-www-from-urlencoded
+        
+        username=kim // 메세지 바디에 쿼리 파라미터 같은 형식으로 들어감 
+        ```
+        
+    - form을 get으로도 보낼 수 있지만 from안에 데이터를 URL경로에 넣어서 전송을 한다. → 쓰지 말아야 한다.
+    
+    ***multipart/form-data**
+    
+    ```html
+    <form action="/save" method="post" enctype="multipart/form-data">
+    	<input type="text" name="username"/>
+    	<input type="file" name="file1">
+    </form>
+    
+    ---------------------------------------------------
+    POST /save HTTP/1.1
+    Host: localhost:8080
+    **Content-Type:multipart/form-data; boundart=---XXX // 여러 컨텐츠 타입으로 보내짐**
+    Content-Length: 10485
+    
+    ---XXX
+    Content-Disposition: form-data; name="username"
+    
+    kem
+    ---XXX
+    Content-Disposition: form-data; name="file1"; filename="intro.png"
+    
+    109238fjsdofijsdofijoiadfjoadifj....
+    ---XXX--
+    
+    ****
+    ```
+    
+    - form태그는 GET,POST만 지원됨
+- HTTP API 데이터 전송
+    
+    ```html
+    POST /members HTTP/1.1
+    Content-Type: application/json
+    
+    {
+    	"username": "name"
+    }
+    ```
+    
+    - 서버 to 서버 / 앱클라이언트 / 웹클라이언트(Ajax, React, VueJs)에서 사용
+
+### API 설계
+
+- POST 기반 설계
+    - ex) 회원 관리
+    - 클라이언트는 회원을 등록할 때 해당 리소스의 URI를 모른다. (회원 등록 시 서버가 리소스의 URI를 생성해준다 100번 회원 101번 회원.. 등등)
+    - 따라서 서버가 리소스를 생성하고 관리하는 형태를 **컬렉션(Collection)**이라고 한다.
+- PUT 기반 설계
+    - ex) 파일 관리 시스템
+    - 클라리언트가 리소스의 URI를 알고있어야 한다. (파일을 등록할때 파일의 이름으로 등록을 요청한다. start.jpg, blrablra.png)
+    - 따라서 클라이언트가 리소스를 관리하고 URI를 알고 있다 이런 형태를 스토어(Store)라고 한다.
+
+### HTML FORM 사용
+
+- http form을 사용하게 되면 get,post만 사용해야한다.(물론 Ajax를 사용한다면 다른 메서드도 가능)
+- 따라서 uri 규칙을 정해야 한다.
+    - ex) 
+    회원등록 폼(회원 등록 화면을 내려주는 uri) - memeber/new → GET
+    회원등록(실제 회원 등록하는 uri) - member/new → POST or member → POST
+    *회원 등록 시 uri를 전자처럼 사용하는걸 **선호**
+- GET,POST만 지원하기 때문에 컨트롤 URI를 사용해야한다.
+*컨트롤 URI : uri에 동사형태의 경로를 사용하는 것 ex) member/{id}/delete
+
+### 참고하면 좋은 URI 설계 개념 정리
+
+- 문서(document)
+    - 단일 개념(파일 하나, 객체 인스턴스, 데이터 베이스 row)
+    - ex) member/100, /files/star.jpg
+- 컬렉션(collection)
+    - 서버가 관리하는 리소스 디렉터리
+    - 서버가 리소스의 URI를 생성, 관리
+- 스토어(store)
+    - 클라이언트가 관리하는 자원 저장소
+    - 클라이언트가 리소스의 URI를 알고 정리
+- 컨트롤러, 컨트롤 URI
+    - 문서, 컬렉션, 스토어로 해결하기 어려운 추가 프로세스 실행
+    - 동사를 직접 사용
+
+*참고 사이트 (https://restfulapi.net/resource-naming)
