@@ -399,3 +399,65 @@ Content-Type: text/html;charset=UTF-8
 - 503 Service Unavailable 서비스 이용 불가
     - 서버가 일시적인 과부하 또는 예정된 작업(ex 잠시 서버 다운)으로 잠시 요청을 처리할 수 없음
     - Retry-After 헤더 필드로 얼마뒤에 복구되는지 보낼 수도 없음
+
+## HTTP 헤더
+
+```jsx
+HTTP/1.1 200 OK
+Content-Type: text/html;charset=UTF-8   << 표현 헤더
+Content-Length: 3423                    << 표현 헤더
+
+<html>                      
+	<body>...</body>                    << 표현 데이터
+</html>
+```
+
+- 메시지 본문(Message body)을 통해 표현 데이터(메시지 본문 안에 들어가는 데이터)를 전달
+- 메시지 본문 = 페이로드
+- 표현은 요청이나 응답에서 전달할 실제 데이터
+- 표현 헤더는 표현 데이터를 해석할 수 있는 정보 제공
+    - 데이터 유형(html, json), 데이터 길이, 압축 정보 등등
+
+### Content-Encoding 표현 데이터 인코딩
+
+- 표현 데이터를 압축하기 위해 사용
+- 데이터를 전달하는 곳(서버)에서 압축 후 인코딩 헤더에 추가
+- 데이터를 읽는 쪽에서 인코딩 헤더의 정보로 압축 해제
+- ex) Content-Encoding: gzip
+    - 서버에서 gzip으로 압축을 해서 응답을하면 클라이언트는 헤더에 인코딩을 보고 압축을 푼다.
+
+### 협상(콘텐츠 네고시에이션) - 클라이언트가 선호하는 표현 요청
+
+- Accept: 클라이언트가 선호하는 미디어 타입 전달
+- Accept-Charset, Accept-Encoding, Accept-Language 등등 선호하는 것을 요청 헤더에 담아서 보낸다.
+- 협상 헤더는 요청시에만 사용
+
+### 전송 방식
+
+1. 단순 전송 - Content-Length
+    - 길이를 정확히 알 때 한번에 요청하고 한번에 받기
+2. 압축 전송 - Content-Encoding
+    - 압축해서 전송한다.
+    - 반드시 Content-Encoding: gzip 이런식으로 헤더에 담아서 보내야한다.
+3. 분할 전송 Transfer-Encoding
+    - Transfer-Encoding: chunked
+    - 용량이 커서 한번에 보내기 힘들때 분할하여 전송한다.
+    - **Content-Langth를 보내면 안된다.**
+4. 범위 전송 Range, Content-Range
+
+### 일반 정보
+
+- Referer
+    - 이전 웹 페이지 수소
+    - Regerer를 사용해서 유입 경로 분석 가능
+    - 요청에서 사용
+- User-Agent
+    - 클라이언트 애플리케이션 정보(웹 브라우저 정보 등등)
+    - 어떤 특정 종류의 웹 브라우저에서 버그가 생길 때 장애 파악 가능
+    - 통계 정보
+- Server 요청을 처리하는 ORIGIN 서버의 소프트웨어 정보
+    - 실제 요청이 도착해서 응답을 해주는 실제 서버
+    - 응답에서 사용
+- Date
+    - 메세지가 발생한 날짜와 시간
+    - 응답에서 사용
